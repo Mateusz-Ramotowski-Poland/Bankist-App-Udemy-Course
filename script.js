@@ -135,14 +135,14 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.curency);
+  labelBalance.textContent = formatCur(acc.balance, acc.locale, acc.currency);
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.curency);
+  labelSumIn.textContent = formatCur(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
@@ -173,7 +173,7 @@ const createUsernames = function (accs) {
 createUsernames(accounts);
 
 const updateUI = function (acc) {
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   calcDisplayBalance(acc);
 
@@ -182,7 +182,7 @@ const updateUI = function (acc) {
 
 const startLogOutTimer = function () {
   const tick = function () {
-    const min = String(Math.trunc(time / 60).padStart(2, '0'));
+    const min = String(Math.trunc(time / 60)).padStart(2, '0');
     const sec = String(time % 60).padStart(2, 0);
 
     // In each call, printthe remaining time to UI
@@ -233,7 +233,7 @@ btnLogin.addEventListener('click', function (e) {
     const now = new Date();
     const options = {
       hour: 'numeric',
-      minute: 'nimeric',
+      minute: 'numeric',
       day: 'numeric',
       month: 'numeric',
       year: 'numeric',
@@ -276,6 +276,9 @@ btnTransfer.addEventListener('click', function (e) {
     // doing the transfer
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
+    // Add transfer date
+currentAccount.movementsDates.push(new Date().toISOString());
+receiverAcc.movementsDates.push(new Date().toISOString());
 
     updateUI(currentAccount);
 
@@ -297,7 +300,7 @@ btnLoan.addEventListener('click', function (e) {
 
       // Add loan date
       currentAccount.movementsDates.push(new Date().toISOString());
-
+      
       updateUI(currentAccount);
 
       //Reset Timer
@@ -334,6 +337,6 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
