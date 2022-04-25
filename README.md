@@ -25,6 +25,7 @@ I was using Chrome developer tools for testing this application.
 * request loan
 * delete account
 * sort movements
+* Logout timer
 
 ## Project Status
 Finished project.
